@@ -19,7 +19,7 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             overflow-x: hidden;
         }
-
+ 
         /* WhatsApp Float Button */
         .whatsapp-float {
             position: fixed;

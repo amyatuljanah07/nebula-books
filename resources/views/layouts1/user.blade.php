@@ -363,24 +363,14 @@
                 </a>
             </li> 
            
-            <li>
-                <a href="#">
-                    <i class="fas fa-heart"></i>
-                    <span>Wishlist</span>
-                </a>
-            </li>
+          
             <li>
                 <a href="{{ route('profile.index') }}" class="{{ request()->routeIs('profile.index.*') ? 'active' : '' }}">
         <i class="fas fa-user"></i>
         <span>Profile</span>
     </a>
             </li>
-            <li>
-                <a href="#">
-                    <i class="fas fa-cog"></i>
-                    <span>Pengaturan</span>
-                </a>
-            </li>
+           
             <li>
                 <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <i class="fas fa-sign-out-alt"></i>
