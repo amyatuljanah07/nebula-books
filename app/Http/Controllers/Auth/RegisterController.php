@@ -11,23 +11,25 @@ use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
 {
-    /**
-     * Show the registration form.
-     */
+    
     public function showRegistrationForm()
     {
         return view('auth.register');
     }
 
-    /**
-     * Handle registration request.
-     */
+   
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'confirmed'],
+            'phone' => ['required', 'string', 'max:20'],
+            'address' => ['required', 'string'],
+            'birth_date' => ['required', 'date'],
+            'gender' => ['required', 'in:male,female'],
+            'city' => ['nullable', 'string', 'max:100'],
+            'postal_code' => ['nullable', 'string', 'max:20'],
         ]);
 
         if ($validator->fails()) {
@@ -41,6 +43,12 @@ class RegisterController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => 'user',
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'birth_date' => $request->birth_date,
+            'gender' => $request->gender,
+            'city' => $request->city,
+            'postal_code' => $request->postal_code,
         ]);
 
         Auth::login($user);

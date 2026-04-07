@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add New Book - NebulaBooks</title>
-    <<link rel="stylesheet" 
+    <link rel="stylesheet" 
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" 
       integrity="sha512-..." 
       crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -14,9 +14,9 @@
         :root {
             --sidebar-width: 280px;
             --sidebar-collapsed-width: 80px;
-            --primary-color: #667eea;
-            --secondary-color: #764ba2;
-            --sidebar-bg: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            --primary-color: #5B4B9F;
+            --secondary-color: #5B4B9F;
+            --sidebar-bg: #5B4B9F;
         }
 
         * {
@@ -31,7 +31,6 @@
             overflow-x: hidden;
         }
 
-        /* Sidebar Styles */
         .sidebar {
             position: fixed;
             top: 0;
@@ -150,7 +149,6 @@
             margin-right: 0;
         }
 
-        /* Toggle Button - Always Visible */
         .sidebar-toggle {
             position: fixed;
             top: 20px;
@@ -190,7 +188,6 @@
 
         
 
-        /* Main Content */
         .main-content {
             margin-left: 250px;
             padding: 20px;
@@ -199,7 +196,6 @@
             margin-left: var(--sidebar-collapsed-width);
         }
 
-        /* Mobile Overlay */
         .sidebar-overlay {
             display: none;
             position: fixed;
@@ -218,7 +214,6 @@
             opacity: 1;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -251,7 +246,6 @@
             }
         }
 
-        /* Header */
         .header {
             background: white;
             padding: 20px 30px;
@@ -278,7 +272,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #5B4B9F;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -301,7 +295,6 @@
             background: #c0392b;
         }
 
-        /* Form Section */
         .form-section {
             background: white;
             padding: 30px;
@@ -366,7 +359,7 @@
         input:focus,
         textarea:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #5B4B9F;
         }
 
         textarea {
@@ -388,7 +381,7 @@
 
         .btn-submit {
             padding: 12px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #5B4B9F;
             color: white;
             border: none;
             border-radius: 5px;
@@ -452,7 +445,7 @@
         textarea:focus,
         select:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #5B4B9F;
         }
 
         .sidebar.collapsed .sidebar-menu a::after {
@@ -480,7 +473,6 @@
     </style>
 </head>
 <body>
-     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h3>NebulaBooks</h3>
@@ -542,20 +534,13 @@
         </ul>
     </aside>
 
-    <!-- Sidebar Toggle Button -->
     <button class="sidebar-toggle" id="sidebarToggle" title="Toggle Sidebar">
         <i class="fas fa-bars"></i>
     </button>
 
-    <!-- Sidebar Overlay (Mobile) -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-
     
-
-    <!-- Main Content -->
     <div class="main-content">
-        <!-- Header -->
         <div class="header">
             <h1>Add New Book</h1>
             <div class="user-info">
@@ -573,7 +558,6 @@
             </div>
         </div>
 
-        <!-- Form Section -->
         <div class="form-section">
             <div class="form-header">
                 <h2>Book Information</h2>
@@ -686,7 +670,7 @@
     </div>
 
    <script>
-    // IMAGE PREVIEW
+    
     function previewImage(event) {
         const preview = document.getElementById('preview');
         const previewContainer = document.getElementById('imagePreview');
@@ -702,7 +686,7 @@
         }
     }
 
-    // SIDEBAR TOGGLE — HARUS DI LUAR FUNGSI previewImage
+  
     const sidebar = document.getElementById('sidebar');
     const sidebarToggle = document.getElementById('sidebarToggle');
     const sidebarOverlay = document.getElementById('sidebarOverlay');

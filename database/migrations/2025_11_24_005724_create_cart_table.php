@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+   
     public function up(): void
     {
         Schema::create('cart', function (Blueprint $table) {
@@ -17,15 +15,12 @@ return new class extends Migration
             $table->foreignId('book_id')->constrained('books')->onDelete('cascade');
             $table->integer('quantity')->default(1);
             $table->timestamps();
-            
-            // Ensure one cart item per user per book
+    
             $table->unique(['user_id', 'book_id']);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+  
     public function down(): void
     {
         Schema::dropIfExists('cart');

@@ -22,20 +22,17 @@ class OrderItem extends Model
         'subtotal' => 'decimal:2',
         'quantity' => 'integer'
     ];
-
-    // Relasi ke Order
     public function order()
     {
         return $this->belongsTo(Order::class);
     }
 
-    // Relasi ke Book
+
     public function book()
     {
         return $this->belongsTo(Book::class);
     }
 
-    // Boot method untuk auto-calculate subtotal
     protected static function boot()
     {
         parent::boot();
@@ -51,13 +48,13 @@ class OrderItem extends Model
         });
     }
 
-    // Accessor untuk format price
+    
     public function getFormattedPriceAttribute()
     {
         return 'Rp ' . number_format($this->price, 0, ',', '.');
     }
 
-    // Accessor untuk format subtotal
+  
     public function getFormattedSubtotalAttribute()
     {
         return 'Rp ' . number_format($this->subtotal, 0, ',', '.');

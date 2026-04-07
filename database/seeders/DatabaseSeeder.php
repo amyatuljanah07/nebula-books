@@ -8,12 +8,10 @@ use App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+    
     public function run(): void
     {
-        // Create Admin User
+        
         User::create([
             'name' => 'Admin',
             'email' => 'admin@nebulabooks.com',
@@ -22,7 +20,6 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
-        // Create Regular User
         User::create([
             'name' => 'User',
             'email' => 'user@nebulabooks.com',

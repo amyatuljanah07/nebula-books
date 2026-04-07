@@ -1,10 +1,8 @@
-<!-- filepath: c:\laragon\www\NebulaBooks\resources\views\admin\users\create.blade.php -->
 @extends('layouts.admin')
 
 @section('content')
 <div class="container mt-4">
     <div class="row">
-        <!-- Form Tambah User -->
         <div class="col-md-6">
             <h2 class="mb-4">Tambah User Baru</h2>
             <div class="card shadow-sm">

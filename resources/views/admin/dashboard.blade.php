@@ -4,21 +4,17 @@
 
 @section('content')
 <div class="container-fluid">
-    <!-- Page Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-start mb-4 flex-column flex-md-row gap-2">
         <div>
             <h2 class="mb-1">Dashboard</h2>
             <p class="text-muted mb-0">Welcome back, {{ Auth::user()->name }}!</p>
         </div>
-        <div class="text-muted">
-            <i class="fas fa-calendar-alt me-2"></i>{{ date('l, d F Y') }}
+        <div class="text-muted text-nowrap">
+            <i class="fas fa-calendar-alt me-2"></i><span class="d-none d-md-inline">{{ date('l, d F Y') }}</span><span class="d-md-none">{{ date('d/m/Y') }}</span>
         </div>
     </div>
-
-    <!-- Statistics Cards -->
-    <div class="row g-4 mb-4">
-        <!-- Total Books -->
-        <div class="col-md-3">
+    <div class="row g-3 g-md-4 mb-4">
+        <div class="col-12 col-sm-6 col-lg-3">
             <div class="stats-card">
                 <div class="stats-icon bg-primary">
                     <i class="fas fa-book"></i>
@@ -28,10 +24,8 @@
                     <p>Total Books</p>
                 </div>
             </div>
-        </div>
-
-        <!-- Total Orders -->
-        <div class="col-md-3">
+        </div>   
+        <div class="col-12 col-sm-6 col-lg-3">
             <div class="stats-card">
                 <div class="stats-icon bg-success">
                     <i class="fas fa-shopping-cart"></i>
@@ -42,9 +36,7 @@
                 </div>
             </div>
         </div>
-
-        <!-- Total Users -->
-        <div class="col-md-3">
+        <div class="col-12 col-sm-6 col-lg-3">
             <div class="stats-card">
                 <div class="stats-icon bg-info">
                     <i class="fas fa-users"></i>
@@ -55,28 +47,35 @@
                 </div>
             </div>
         </div>
-
-        <!-- Total Revenue -->
-        <div class="col-md-3">
+        <div class="col-12 col-sm-6 col-lg-3">
             <div class="stats-card">
                 <div class="stats-icon bg-warning">
                     <i class="fas fa-money-bill-wave"></i>
                 </div>
                 <div class="stats-content">
-                    <h3>Rp {{ number_format($totalRevenue, 0, ',', '.') }}</h3>
+                    <h3 class="text-truncate">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</h3>
                     <p>Total Revenue</p>
                 </div>
             </div>
         </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="stats-card">
+                <div class="stats-icon bg-danger">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div class="stats-content">
+                    <h3>{{ $unreadChats }}<span style="font-size: 0.7em; color: #6c757d;">/ {{ $totalChats }}</span></h3>
+                    <p>Unread Chats</p>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="row g-4">
-        <!-- Recent Orders -->
-        <div class="col-lg-8">
+    <div class="row g-3 g-md-4">
+        <div class="col-12 col-lg-8">
             <div class="card">
-                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center flex-column flex-md-row gap-2">
                     <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Recent Orders</h5>
-                    <a href="{{ route('admin.orders.index') }}" class="btn btn-sm btn-outline-primary">
+                    <a href="{{ route('admin.orders.index') }}" class="btn btn-sm btn-outline-primary w-100 w-md-auto">
                         View All
                     </a>
                 </div>
@@ -86,10 +85,10 @@
                             <thead class="table-light">
                                 <tr>
                                     <th>Order ID</th>
-                                    <th>Customer</th>
+                                    <th class="d-none d-sm-table-cell">Customer</th>
                                     <th>Total</th>
                                     <th>Status</th>
-                                    <th>Date</th>
+                                    <th class="d-none d-md-table-cell">Date</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -99,12 +98,12 @@
                                     <td>
                                         <span class="badge bg-secondary">{{ $order->order_number }}</span>
                                     </td>
-                                    <td>
+                                    <td class="d-none d-sm-table-cell">
                                         <div class="d-flex align-items-center">
                                             <div class="avatar-sm me-2">
                                                 {{ substr($order->user->name, 0, 1) }}
                                             </div>
-                                            <div>
+                                            <div class="d-none d-md-block">
                                                 <strong>{{ $order->user->name }}</strong>
                                                 <br>
                                                 <small class="text-muted">{{ $order->user->email }}</small>
@@ -152,10 +151,7 @@
                 </div>
             </div>
         </div>
-
-        <!-- Quick Stats -->
         <div class="col-lg-4">
-            <!-- Order Status Chart -->
             <div class="card mb-4">
                 <div class="card-header bg-white py-3">
                     <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Order Status</h5>
@@ -224,22 +220,20 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Quick Actions -->
             <div class="card">
                 <div class="card-header bg-white py-3">
                     <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
                 </div>
                 <div class="card-body">
-                    <div class="d-grid gap-2">
-                        <a href="{{ route('admin.books.create') }}" class="btn btn-outline-primary">
-                            <i class="fas fa-plus-circle me-2"></i>Add New Book
+                    <div class="d-grid gap-2 gap-sm-3">
+                        <a href="{{ route('admin.books.create') }}" class="btn btn-outline-primary btn-sm d-md-block">
+                            <i class="fas fa-plus-circle me-2"></i><span class="d-none d-sm-inline">Add New Book</span><span class="d-sm-none">Add Book</span>
                         </a>
-                        <a href="{{ route('admin.categories.create') }}" class="btn btn-outline-success">
-                            <i class="fas fa-folder-plus me-2"></i>Add Category
+                        <a href="{{ route('admin.categories.create') }}" class="btn btn-outline-success btn-sm d-md-block">
+                            <i class="fas fa-folder-plus me-2"></i><span class="d-none d-sm-inline">Add Category</span><span class="d-sm-none">Category</span>
                         </a>
-                        <a href="{{ route('admin.orders.index') }}" class="btn btn-outline-info">
-                            <i class="fas fa-list me-2"></i>View All Orders
+                        <a href="{{ route('admin.orders.index') }}" class="btn btn-outline-info btn-sm d-md-block">
+                            <i class="fas fa-list me-2"></i><span class="d-none d-sm-inline">View All Orders</span><span class="d-sm-none">Orders</span>
                         </a>
                     </div>
                 </div>
@@ -274,6 +268,7 @@
     justify-content: center;
     font-size: 1.5rem;
     color: white;
+    flex-shrink: 0;
 }
 
 .stats-content h3 {
@@ -289,11 +284,15 @@
     font-size: 0.875rem;
 }
 
+.status-item {
+    margin-bottom: 1.5rem;
+}
+
 .avatar-sm {
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #5B4B9F;
     color: white;
     display: flex;
     align-items: center;
@@ -327,6 +326,70 @@
 
 .table tbody tr:hover {
     background: #f8f9ff;
+}
+
+
+@media (max-width: 768px) {
+    .stats-card {
+        padding: 1rem;
+        gap: 0.75rem;
+    }
+
+    .stats-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+
+    .stats-content h3 {
+        font-size: 1.25rem;
+    }
+
+    .stats-content p {
+        font-size: 0.75rem;
+    }
+
+    .card {
+        border-radius: 10px;
+    }
+
+    .table {
+        font-size: 0.8rem;
+    }
+
+    .badge {
+        font-size: 0.65rem;
+        padding: 0.35rem 0.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .stats-card {
+        padding: 0.75rem;
+    }
+
+    .stats-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+    }
+
+    .stats-content h3 {
+        font-size: 1.1rem;
+    }
+
+    .stats-content p {
+        font-size: 0.7rem;
+    }
+
+    .d-grid.gap-2 {
+        gap: 0.5rem;
+    }
+
+    .btn {
+        padding: 0.35rem 0.5rem;
+        font-size: 0.75rem;
+    }
 }
 </style>
 @endsection

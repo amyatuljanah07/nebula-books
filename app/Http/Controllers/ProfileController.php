@@ -29,13 +29,15 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:500',
+            'city' => 'nullable|string|max:100',
+            'postal_code' => 'nullable|string|max:20',
             'birth_date' => 'nullable|date|before:today',
             'gender' => 'nullable|in:male,female',
             'avatar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         if ($request->hasFile('avatar')) {
-            // Hapus avatar lama
+           
             if ($user->avatar) {
                 Storage::disk('public')->delete('avatars/' . $user->avatar);
             }

@@ -18,18 +18,22 @@ class Order extends Model
         'payment_status',
         'payment_method',
         'payment_proof',
+        'payment_deadline',
         'shipping_address',
         'phone',
-        'notes'
+        'notes',
+        'city',
+        'postal_code'
     ];
 
     protected $casts = [
         'total_amount' => 'decimal:2',
         'created_at' => 'datetime',
-        'updated_at' => 'datetime'
+        'updated_at' => 'datetime',
+        'payment_deadline' => 'datetime'
     ];
 
-    // Auto generate order number
+   
     protected static function boot()
     {
         parent::boot();
@@ -41,43 +45,67 @@ class Order extends Model
         });
     }
 
-    // Relasi ke User
+ 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // Relasi ke Order Items
     public function items()
     {
         return $this->hasMany(OrderItem::class);
     }
 
-    // Accessor format total
+ 
     public function getFormattedTotalAttribute()
     {
         return 'Rp ' . number_format($this->total_amount, 0, ',', '.');
     }
 
-    // Scope filter by status
+ 
     public function scopeStatus($query, $status)
     {
         return $query->where('status', $status);
     }
 
-    // Scope filter by payment status
+  
     public function scopePaymentStatus($query, $paymentStatus)
     {
         return $query->where('payment_status', $paymentStatus);
     }
 
-    // Check if completed
     public function isCompleted()
     {
         return $this->status === 'completed' && $this->payment_status === 'paid';
     }
 
-    // Check if can be cancelled
+    public function isPaymentExpired()
+    {
+        if (!$this->payment_deadline) {
+            return false;
+        }
+
+        if ($this->payment_status === 'paid') {
+            return false;
+        }
+        
+        return now()->isAfter($this->payment_deadline);
+    }
+
+    public function getTimeRemainingAttribute()
+    {
+        if ($this->isPaymentExpired()) {
+            return 0;
+        }
+
+        if (!$this->payment_deadline) {
+            return null;
+        }
+
+        return now()->diffInSeconds($this->payment_deadline, false);
+    }
+
+  
     public function canBeCancelled()
     {
         return in_array($this->status, ['pending', 'processing']);

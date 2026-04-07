@@ -28,7 +28,7 @@
                         <td>{{ $users->firstItem() + $index }}</td>
                         <td>
                             <div class="d-flex align-items-center">
-                                <div class="user-avatar-small me-2" style="width: 35px; height: 35px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
+                                <div class="user-avatar-small me-2" style="width: 35px; height: 35px; background: #5B4B9F; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
                                     {{ strtoupper(substr($user->name, 0, 1)) }}
                                 </div>
                                 <strong>{{ $user->name }}</strong>
@@ -95,7 +95,7 @@
 
 <style>
     .btn-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: #5B4B9F;
         border: none;
         padding: 10px 20px;
         border-radius: 8px;

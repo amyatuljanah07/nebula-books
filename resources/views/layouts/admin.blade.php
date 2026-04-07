@@ -4,21 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin Panel') - NebulaBooks</title>
-    
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Custom CSS -->
     <style>
         :root {
             --sidebar-width: 280px;
             --sidebar-collapsed-width: 80px;
-            --primary-color: #667eea;
-            --secondary-color: #764ba2;
-            --sidebar-bg: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            --primary-color: #5B4B9F;
+            --secondary-color: #5B4B9F;
+            --sidebar-bg: #5B4B9F;
         }
 
         * {
@@ -33,7 +29,6 @@
             overflow-x: hidden;
         }
 
-        /* Sidebar Styles */
         .sidebar {
             position: fixed;
             top: 0;
@@ -152,7 +147,6 @@
             margin-right: 0;
         }
 
-        /* Toggle Button - Always Visible */
         .sidebar-toggle {
             position: fixed;
             top: 20px;
@@ -190,7 +184,6 @@
             transform: rotate(180deg);
         }
 
-        /* Main Content */
         .main-content {
             margin-left: var(--sidebar-width);
             padding: 2rem;
@@ -203,7 +196,6 @@
             margin-left: var(--sidebar-collapsed-width);
         }
 
-        /* Mobile Overlay */
         .sidebar-overlay {
             display: none;
             position: fixed;
@@ -222,10 +214,14 @@
             opacity: 1;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
+            :root {
+                --sidebar-width: 260px;
+            }
+
             .sidebar {
                 transform: translateX(-100%);
+                width: 260px;
             }
 
             .sidebar.show {
@@ -253,9 +249,210 @@
             .sidebar.collapsed ~ .main-content {
                 margin-left: 0;
             }
+
+            .card {
+                margin-bottom: 1.5rem;
+                border-radius: 10px;
+            }
+
+            .card-header {
+                padding: 1rem !important;
+            }
+
+            .card-body {
+                padding: 1rem !important;
+            }
+
+            .table-responsive {
+                font-size: 0.875rem;
+            }
+
+            .table thead th {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .table td {
+                padding: 0.75rem 0.5rem;
+                vertical-align: middle;
+            }
+
+            .btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.875rem;
+            }
+
+            .btn-sm {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.75rem;
+            }
+
+            .btn-group {
+                flex-wrap: wrap;
+            }
+
+            .btn-group .btn {
+                margin-bottom: 0.25rem;
+            }
+
+            .form-label {
+                font-size: 0.875rem;
+                margin-bottom: 0.4rem;
+            }
+
+            .form-control, .form-select {
+                font-size: 0.875rem;
+                padding: 0.5rem;
+            }
+
+            .row {
+                margin-right: -0.5rem;
+                margin-left: -0.5rem;
+            }
+
+            .col-md-3, .col-md-4, .col-md-6, .col-lg-8 {
+                padding-right: 0.5rem;
+                padding-left: 0.5rem;
+            }
+
+            .stats-card {
+                display: flex;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .stats-icon {
+                width: 50px;
+                height: 50px;
+                min-width: 50px;
+            }
+
+            .stats-content h3 {
+                font-size: 1.25rem;
+            }
+
+            .stats-content p {
+                font-size: 0.8rem;
+            }
+
+            .breadcrumb {
+                font-size: 0.85rem;
+                margin-bottom: 1rem;
+            }
+
+            .modal-body {
+                padding: 1rem;
+            }
+
+            .badge {
+                font-size: 0.75rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            h3 {
+                font-size: 1.2rem;
+            }
+
+            h4 {
+                font-size: 1rem;
+            }
+
+            .mb-4 {
+                margin-bottom: 1rem !important;
+            }
+
+            .mb-3 {
+                margin-bottom: 0.8rem !important;
+            }
+
+            .p-4 {
+                padding: 1rem !important;
+            }
+
+            .p-3 {
+                padding: 0.8rem !important;
+            }
+
+            .alert {
+                padding: 0.75rem;
+                font-size: 0.875rem;
+                margin-bottom: 1rem;
+            }
+
+            .avatar-lg {
+                width: 50px;
+                height: 50px;
+            }
+
+            .d-md-none {
+                display: none !important;
+            }
         }
 
-        /* Card Styles */
+        @media (max-width: 576px) {
+            .main-content {
+                padding: 0.75rem;
+                padding-top: 5rem;
+            }
+
+            .card {
+                border-radius: 8px;
+            }
+
+            .btn {
+                padding: 0.35rem 0.75rem;
+                font-size: 0.8rem;
+            }
+
+            .col-md-3, .col-md-4, .col-md-6, .col-lg-8 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+
+            .form-control, .form-select {
+                font-size: 0.8rem;
+            }
+
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .table {
+                font-size: 0.75rem;
+                white-space: nowrap;
+            }
+
+            .table thead th {
+                padding: 0.5rem 0.4rem;
+            }
+
+            .table td {
+                padding: 0.5rem 0.4rem;
+            }
+
+            h2 {
+                font-size: 1.25rem;
+            }
+
+            h3 {
+                font-size: 1rem;
+            }
+
+            .d-flex.justify-content-between {
+                display: block !important;
+            }
+
+            .text-muted small {
+                display: block;
+                font-size: 0.75rem;
+                margin-top: 0.5rem;
+            }
+        }
+
         .card {
             border: none;
             border-radius: 15px;
@@ -269,7 +466,11 @@
             border-radius: 15px 15px 0 0 !important;
         }
 
-        /* Button Styles */
+        .container-fluid {
+            padding-right: 2rem;
+            padding-left: 2rem;
+        }
+
         .btn {
             border-radius: 8px;
             padding: 0.5rem 1.5rem;
@@ -285,7 +486,40 @@
             background: var(--secondary-color);
         }
 
-        /* Tooltip untuk collapsed sidebar */
+        .stats-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 3px 15px rgba(0,0,0,.08);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .stats-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stats-content h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #222;
+        }
+
+        .stats-content p {
+            margin: 0.25rem 0 0;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
         .sidebar.collapsed .sidebar-menu a {
             position: relative;
         }
@@ -312,12 +546,60 @@
             opacity: 1;
             left: calc(100% + 5px);
         }
+
+        .w-md-auto {
+            width: auto !important;
+        }
+
+        .gap-2 {
+            gap: 0.5rem;
+        }
+
+        .gap-3 {
+            gap: 1rem;
+        }
+
+        .avatar-sm {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: #5B4B9F;
+            border-radius: 50%;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .text-truncate-2 {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .flex-column {
+            flex-direction: column;
+        }
+
+        @supports (display: grid) {
+            .g-3 {
+                --bs-gutter-x: 1rem;
+                --bs-gutter-y: 1rem;
+            }
+
+            .g-md-4 {
+                --bs-gutter-x: 1.5rem;
+                --bs-gutter-y: 1.5rem;
+            }
+        }
     </style>
 
     @stack('styles')
 </head>
 <body>
-    <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h3>NebulaBooks</h3>
@@ -358,6 +640,14 @@
                 </a>
             </li>
             <li>
+                <a href="{{ route('admin.chats.index') }}" 
+                   class="{{ request()->routeIs('admin.chats.*') ? 'active' : '' }}"
+                   data-title="Chats">
+                    <i class="fas fa-comments"></i>
+                    <span>Chats</span>
+                </a>
+            </li>
+            <li>
                 <a href="{{ route('admin.users.index') }}" 
                    class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}"
                    data-title="Users">
@@ -379,15 +669,12 @@
         </ul>
     </aside>
 
-    <!-- Sidebar Toggle Button -->
     <button class="sidebar-toggle" id="sidebarToggle" title="Toggle Sidebar">
         <i class="fas fa-bars"></i>
     </button>
 
-    <!-- Sidebar Overlay (Mobile) -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- Main Content -->
     <main class="main-content">
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -406,26 +693,21 @@
         @yield('content')
     </main>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Sidebar Toggle
         const sidebar = document.getElementById('sidebar');
         const sidebarToggle = document.getElementById('sidebarToggle');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
 
-        // Check if mobile
         function isMobile() {
             return window.innerWidth <= 768;
         }
 
-        // Toggle sidebar
         sidebarToggle.addEventListener('click', function() {
             if (isMobile()) {
                 sidebar.classList.toggle('show');
                 sidebarOverlay.classList.toggle('show');
-                // Change icon
                 const icon = this.querySelector('i');
                 if (sidebar.classList.contains('show')) {
                     icon.className = 'fas fa-times';
@@ -434,9 +716,7 @@
                 }
             } else {
                 sidebar.classList.toggle('collapsed');
-                // Save state to localStorage
                 localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
-                // Change icon
                 const icon = this.querySelector('i');
                 if (sidebar.classList.contains('collapsed')) {
                     icon.className = 'fas fa-bars';
@@ -446,7 +726,6 @@
             }
         });
 
-        // Close sidebar when overlay clicked (mobile)
         sidebarOverlay.addEventListener('click', function() {
             sidebar.classList.remove('show');
             sidebarOverlay.classList.remove('show');
@@ -454,7 +733,6 @@
             icon.className = 'fas fa-bars';
         });
 
-        // Load saved state
         window.addEventListener('DOMContentLoaded', function() {
             if (!isMobile()) {
                 const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
@@ -469,7 +747,6 @@
             }
         });
 
-        // Handle window resize
         window.addEventListener('resize', function() {
             if (!isMobile()) {
                 sidebar.classList.remove('show');

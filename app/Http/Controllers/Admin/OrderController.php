@@ -8,24 +8,22 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    // Tampilkan semua orders
     public function index()
     {
         $orders = Order::with(['user', 'items.book'])
             ->latest()
-            ->paginate(10);
+            ->get();
         
         return view('admin.orders.index', compact('orders'));
     }
 
-    // Tampilkan detail order
     public function show(Order $order)
     {
         $order->load(['user', 'items.book']);
         return view('admin.orders.show', compact('order'));
     }
 
-    // Update status order
+    
     public function updateStatus(Request $request, Order $order)
     {
         $request->validate([
@@ -37,7 +35,7 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Order status berhasil diupdate');
     }
 
-    // Update payment status
+    
     public function updatePaymentStatus(Request $request, Order $order)
     {
         $request->validate([
@@ -49,7 +47,7 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Payment status berhasil diupdate');
     }
 
-    // Hapus order
+   
     public function destroy(Order $order)
     {
         if ($order->canBeCancelled()) {

@@ -37,7 +37,7 @@
                 <tbody>
                     @forelse($orders as $index => $order)
                     <tr>
-                        <td>{{ $orders->firstItem() + $index }}</td>
+                        <td>{{ $loop->iteration }}</td>
                         <td>
                             <strong style="color: #6366f1;">{{ $order->order_number }}</strong>
                         </td>
@@ -99,10 +99,6 @@
                     @endforelse
                 </tbody>
             </table>
-        </div>
-        
-        <div class="mt-3">
-            {{ $orders->links() }}
         </div>
     </div>
 </div>

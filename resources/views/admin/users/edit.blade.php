@@ -5,10 +5,6 @@
     <div class="header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
         <h1 style="margin: 0;">Edit User</h1>
         <div class="user-info" style="display: flex; align-items: center; gap: 12px;">
-            {{-- Avatar jika ingin tampil --}}
-            {{-- <div class="user-avatar" style="background: #6c63ff; color: #fff; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold;">
-                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-            </div> --}}
         </div>
     </div>
     <div class="content-card" style="background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 32px 28px; margin: 0; width: 100%;">

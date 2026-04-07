@@ -41,7 +41,6 @@ class UserController extends Controller
     {
         $query = Book::with('category')->where('status', 'available');
         
-        // Search functionality
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -51,12 +50,12 @@ class UserController extends Controller
             });
         }
         
-        // Category filter
+    
         if ($request->has('category') && $request->category != '') {
             $query->where('category_id', $request->category);
         }
         
-        // Sorting
+       
         $sortBy = $request->get('sort', 'latest');
         switch ($sortBy) {
             case 'price_low':
@@ -86,7 +85,7 @@ class UserController extends Controller
 
     public function show(Book $book)
     {
-        // Get related books from same category
+      
         $relatedBooks = Book::where('category_id', $book->category_id)
                            ->where('id', '!=', $book->id)
                            ->where('status', 'available')
@@ -111,18 +110,18 @@ class UserController extends Controller
 
     public function addToCart(Request $request, Book $book)
     {
-        // Validasi stok
+      
         if ($book->stock < 1) {
             return back()->with('error', 'Stok buku tidak tersedia!');
         }
 
-        // Cek apakah buku sudah ada di cart
+      
         $cartItem = Cart::where('user_id', Auth::id())
                        ->where('book_id', $book->id)
                        ->first();
 
         if ($cartItem) {
-            // Jika sudah ada, tambah quantity
+      
             if ($cartItem->quantity >= $book->stock) {
                 return back()->with('error', 'Jumlah melebihi stok yang tersedia!');
             }
@@ -130,7 +129,7 @@ class UserController extends Controller
             $cartItem->increment('quantity');
             return back()->with('success', 'Jumlah buku di keranjang berhasil ditambah!');
         } else {
-            // Jika belum ada, buat cart item baru
+         
             Cart::create([
                 'user_id' => Auth::id(),
                 'book_id' => $book->id,
@@ -147,7 +146,7 @@ class UserController extends Controller
             'quantity' => 'required|integer|min:1'
         ]);
 
-        // Cek kepemilikan cart
+       
         if ($cart->user_id != Auth::id()) {
             if ($request->ajax()) {
                 return response()->json(['success' => false, 'message' => 'Unauthorized action!']);
@@ -155,7 +154,7 @@ class UserController extends Controller
             return back()->with('error', 'Unauthorized action!');
         }
 
-        // Validasi stok
+       
         if ($request->quantity > $cart->book->stock) {
             if ($request->ajax()) {
                 return response()->json(['success' => false, 'message' => 'Jumlah melebihi stok yang tersedia!']);
@@ -174,7 +173,7 @@ class UserController extends Controller
 
     public function removeFromCart(Cart $cart)
     {
-        // Cek kepemilikan cart
+        
         if ($cart->user_id != Auth::id()) {
             return back()->with('error', 'Unauthorized action!');
         }
@@ -184,21 +183,62 @@ class UserController extends Controller
         return back()->with('success', 'Buku berhasil dihapus dari keranjang!');
     }
 
-    public function checkout()
+    public function showCheckout()
     {
+        $user = Auth::user();
+        $selectedIds = session('checkout_selected_items', []);
+        
+
+        if (empty($selectedIds)) {
+            return redirect()->route('user.cart.index')->with('info', 'Pilih item dari keranjang terlebih dahulu!');
+        }
+
         $cartItems = Cart::where('user_id', Auth::id())
+                        ->whereIn('id', $selectedIds)
                         ->with('book')
                         ->get();
         
         if ($cartItems->count() == 0) {
-            return redirect()->route('user.cart.index')->with('error', 'Keranjang Anda kosong!');
+            return redirect()->route('user.cart.index')->with('error', 'Item yang dipilih tidak ditemukan!');
         }
         
         $subtotal = $cartItems->sum(function($item) {
             return $item->book->price * $item->quantity;
         });
+
+        $lastOrder = Order::where('user_id', $user->id)->latest()->first();
         
-        return view('user.checkout.index', compact('cartItems', 'subtotal'));
+        return view('user.checkout.index', compact('cartItems', 'subtotal', 'user', 'lastOrder'));
+    }
+
+    public function checkout(Request $request)
+    {
+        $request->validate([
+            'selected_items' => 'required|array|min:1',
+            'selected_items.*' => 'integer|exists:cart,id',
+        ]);
+
+        $selectedIds = $request->input('selected_items', []);
+
+        $cartItems = Cart::where('user_id', Auth::id())
+                        ->whereIn('id', $selectedIds)
+                        ->with('book')
+                        ->get();
+        
+        if ($cartItems->count() == 0) {
+            return redirect()->route('user.cart.index')->with('error', 'Pilih minimal 1 item untuk checkout!');
+        }
+        
+        $subtotal = $cartItems->sum(function($item) {
+            return $item->book->price * $item->quantity;
+        });
+
+        session(['checkout_selected_items' => $selectedIds]);
+
+        $user = Auth::user();
+        $lastOrder = Order::where('user_id', $user->id)->latest()->first();
+        
+        return view('user.checkout.index', compact('cartItems', 'subtotal', 'user', 'lastOrder'));
     }
 
     public function processCheckout(Request $request)
@@ -212,22 +252,26 @@ class UserController extends Controller
             'payment_method' => 'required|in:bca,mandiri,bni,bri,gopay,ovo,dana,shopeepay',
         ]);
 
+       
+        $selectedIds = session('checkout_selected_items', []);
+
         $cartItems = Cart::where('user_id', Auth::id())
+                        ->whereIn('id', $selectedIds)
                         ->with('book')
                         ->get();
 
         if ($cartItems->count() == 0) {
-            return redirect()->route('user.cart.index')->with('error', 'Keranjang Anda kosong!');
+            return redirect()->route('user.cart.index')->with('error', 'Keranjang Anda kosong atau item sudah tidak tersedia!');
         }
 
-        // Calculate total
+  
         $subtotal = $cartItems->sum(function($item) {
             return $item->book->price * $item->quantity;
         });
         $adminFee = 5000;
         $total = $subtotal + $adminFee;
 
-        // Create order
+    
         $order = Order::create([
             'user_id' => Auth::id(),
             'order_number' => 'ORD-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6)),
@@ -235,12 +279,15 @@ class UserController extends Controller
             'status' => 'pending',
             'payment_status' => 'unpaid',
             'payment_method' => $request->payment_method,
+            'payment_deadline' => now()->addHours(24),
             'shipping_address' => $request->shipping_address . ', ' . $request->city . ' ' . $request->postal_code,
             'phone' => $request->phone,
+            'city' => $request->city,
+            'postal_code' => $request->postal_code,
             'notes' => $request->notes,
         ]);
 
-        // Create order items
+      
         foreach ($cartItems as $item) {
             $order->items()->create([
                 'book_id' => $item->book_id,
@@ -249,19 +296,22 @@ class UserController extends Controller
                 'subtotal' => $item->book->price * $item->quantity,
             ]);
 
-            // Reduce stock
+       
             $item->book->decrement('stock', $item->quantity);
         }
 
-        // Clear cart
-        Cart::where('user_id', Auth::id())->delete();
+        Cart::where('user_id', Auth::id())
+            ->whereIn('id', $selectedIds)
+            ->delete();
+
+  
+        session()->forget('checkout_selected_items');
 
         return redirect()->route('user.payment', $order)->with('success', 'Pesanan berhasil dibuat! Silakan lakukan pembayaran.');
     }
 
      public function payment(Order $order)
     {
-        // Cek kepemilikan order
         if ($order->user_id != Auth::id()) {
             return redirect()->route('user.dashboard')->with('error', 'Unauthorized action!');
         }
@@ -271,7 +321,6 @@ class UserController extends Controller
 
     public function uploadPaymentProof(Request $request, Order $order)
     {
-        // Cek kepemilikan order
         if ($order->user_id != Auth::id()) {
             return back()->with('error', 'Unauthorized action!');
         }
@@ -280,7 +329,6 @@ class UserController extends Controller
             'payment_proof' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // Upload bukti bayar
         if ($request->hasFile('payment_proof')) {
             $path = $request->file('payment_proof')->store('payment_proofs', 'public');
             
@@ -305,7 +353,7 @@ class UserController extends Controller
 
     public function showOrder(Order $order)
     {
-        // Cek kepemilikan order
+      
         if ($order->user_id != Auth::id()) {
             return redirect()->route('user.dashboard')->with('error', 'Unauthorized action!');
         }

@@ -21,7 +21,6 @@ class Category extends Model
         'is_active' => 'boolean',
     ];
 
-    // Automatically generate slug from name
     protected static function boot()
     {
         parent::boot();
@@ -39,7 +38,7 @@ class Category extends Model
         });
     }
 
-    // Relationship with books
+
     public function books()
     {
         return $this->hasMany(Book::class);

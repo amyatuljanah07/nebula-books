@@ -9,20 +9,20 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    // Tampilkan semua users
+    
     public function index()
     {
         $users = User::latest()->paginate(10);
         return view('admin.users.index', compact('users'));
     }
 
-    // Form tambah user
+  
     public function create()
     {
         return view('admin.users.create');
     }
 
-    // Simpan user baru
+  
     public function store(Request $request)
     {
         $request->validate([
@@ -38,20 +38,20 @@ User::create([
     'email' => $request->email,
     'password' => Hash::make($request->password),
     'role' => $request->role,
-    'status' => 'inactive' // default
+    'status' => 'inactive' 
 ]);
 
         return redirect()->route('admin.users.index')
             ->with('success', 'User berhasil ditambahkan');
     }
 
-    // Form edit user
+
     public function edit(User $user)
     {
         return view('admin.users.edit', compact('user'));
     }
 
-    // Update user
+  
     public function update(Request $request, User $user)
     {
         $request->validate([
@@ -77,10 +77,9 @@ User::create([
             ->with('success', 'User berhasil diupdate');
     }
 
-    // Hapus user
+
     public function destroy(User $user)
     {
-        // Prevent deleting own account
         if ($user->id === auth()->id()) {
             return redirect()->back()
                 ->with('error', 'Tidak dapat menghapus akun sendiri');
@@ -92,8 +91,7 @@ User::create([
             ->with('success', 'User berhasil dihapus');
     }
 
-    // Toggle status user
-   
+
 public function toggleStatus(User $user)
 {
     $user->update([

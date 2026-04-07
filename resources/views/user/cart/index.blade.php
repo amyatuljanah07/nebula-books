@@ -1,11 +1,11 @@
 @extends('layouts1.user')
 
+@section('title', 'Keranjang - NebulaBooks')
 @section('page-title', 'Keranjang')
 @section('page-subtitle', 'Kelola belanjaan Anda')
 
 @section('content')
 <div class="container-fluid px-4">
-    <!-- Alert Messages -->
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
@@ -21,7 +21,6 @@
     @endif
 
     <div class="row">
-        <!-- Cart Items -->
         <div class="col-lg-8 mb-4">
             <div class="card cart-card">
                 <div class="card-header">
@@ -33,10 +32,9 @@
                 </div>
                 <div class="card-body p-0">
                     @forelse($cartItems as $item)
-                    <!-- Cart Item -->
                     <div class="cart-item">
                         <div class="cart-item-checkbox">
-                            <input type="checkbox" class="form-check-input item-checkbox" checked>
+                            <input type="checkbox" class="form-check-input item-checkbox" data-cart-id="{{ $item->id }}">
                         </div>
                         <div class="cart-item-image">
                             @if($item->book->image)
@@ -83,9 +81,6 @@
                             <div class="item-total-price" data-item-total>Rp {{ number_format($item->book->price * $item->quantity, 0, ',', '.') }}</div>
                         </div>
                         <div class="cart-item-actions">
-                            <button class="btn-action wishlist" title="Pindah ke Wishlist">
-                                <i class="fas fa-heart"></i>
-                            </button>
                             <form action="{{ route('user.cart.remove', $item) }}" method="POST" style="display: inline;">
                                 @csrf
                                 @method('DELETE')
@@ -110,7 +105,7 @@
                 <div class="card-footer">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <input type="checkbox" class="form-check-input me-2" id="selectAll" checked>
+                            <input type="checkbox" class="form-check-input me-2" id="selectAll">
                             <label for="selectAll">Pilih Semua</label>
                         </div>
                         <button class="btn btn-outline-danger btn-sm" onclick="deleteSelected()">
@@ -122,7 +117,6 @@
             </div>
         </div>
 
-        <!-- Order Summary -->
         @if($cartItems->count() > 0)
         <div class="col-lg-4">
             <div class="card summary-card sticky-top">
@@ -133,7 +127,6 @@
                     </h5>
                 </div>
                 <div class="card-body">
-                    <!-- Promo Code -->
                     <div class="promo-section mb-3">
                         <label class="form-label">Kode Promo</label>
                         <div class="input-group">
@@ -142,11 +135,10 @@
                         </div>
                     </div>
 
-                    <!-- Summary Details -->
                     <div class="summary-details">
                         <div class="summary-row">
-                            <span>Subtotal ({{ $cartItems->count() }} items)</span>
-                            <span class="fw-bold" id="subtotal-display">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+                            <span>Subtotal (<span id="checked-count">0</span> items)</span>
+                            <span class="fw-bold" id="subtotal-display">Rp 0</span>
                         </div>
                         <div class="summary-row discount">
                             <span>
@@ -162,17 +154,19 @@
                         <hr>
                         <div class="summary-row total">
                             <span class="fw-bold">Total</span>
-                            <span class="fw-bold text-primary" id="total-display">Rp {{ number_format($subtotal + 5000, 0, ',', '.') }}</span>
+                            <span class="fw-bold text-primary" id="total-display">Rp 0</span>
                         </div>
                     </div>
 
-                    <!-- Checkout Button -->
-                    <a href="{{ route('user.checkout') }}" class="btn btn-checkout w-100">
-                        <i class="fas fa-lock me-2"></i>
-                        Lanjut ke Pembayaran
-                    </a>
+                    <form action="{{ route('user.checkout') }}" method="POST" id="checkout-form">
+                        @csrf
+                        <div id="selected-items-container"></div>
+                        <button type="submit" class="btn btn-checkout w-100" id="btn-checkout" disabled style="opacity: 0.5; cursor: not-allowed;">
+                            <i class="fas fa-lock me-2"></i>
+                            Lanjut ke Pembayaran
+                        </button>
+                    </form>
 
-                    <!-- Continue Shopping -->
                     <a href="{{ route('books.index') }}" class="btn-continue-shopping">
                         <i class="fas fa-arrow-left me-2"></i>
                         Lanjut Belanja
@@ -180,7 +174,6 @@
                 </div>
             </div>
 
-            <!-- Shipping Info -->
             <div class="card info-card mt-3">
                 <div class="card-body">
                     <h6 class="mb-3">
@@ -277,7 +270,7 @@
 
 .cart-item-category {
     display: inline-block;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #5B4B9F;
     color: white;
     padding: 3px 10px;
     border-radius: 12px;
@@ -383,7 +376,7 @@
 }
 
 .btn-action.wishlist:hover {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: #f5576c;
     border-color: transparent;
     color: white;
 }
@@ -400,7 +393,6 @@
     padding: 1rem 1.5rem;
 }
 
-/* Summary Card */
 .summary-card {
     border: none;
     border-radius: 15px;
@@ -408,7 +400,7 @@
 }
 
 .summary-card .card-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #5B4B9F;
     color: white;
     border-radius: 15px 15px 0 0;
     padding: 1.25rem 1.5rem;
@@ -459,7 +451,7 @@
 }
 
 .voucher-info {
-    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    background: #fde68a;
     padding: 0.875rem 1rem;
     border-radius: 10px;
     display: flex;
@@ -475,7 +467,7 @@
 }
 
 .btn-checkout {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #5B4B9F;
     color: white;
     border: none;
     padding: 1rem;
@@ -505,7 +497,6 @@
     color: #764ba2;
 }
 
-/* Info Card */
 .info-card {
     border: none;
     border-radius: 15px;
@@ -532,7 +523,6 @@
     gap: 0.5rem;
 }
 
-/* Responsive */
 @media (max-width: 992px) {
     .cart-item {
         grid-template-columns: 1fr;
@@ -557,7 +547,6 @@
 </style>
 
 <script>
-// Update Quantity
 function updateQuantity(btn, change, cartId, maxStock) {
     const input = btn.parentElement.querySelector('.qty-input');
     let currentValue = parseInt(input.value);
@@ -571,7 +560,6 @@ function updateQuantity(btn, change, cartId, maxStock) {
     
     input.value = newValue;
     
-    // Submit form via AJAX
     const form = btn.closest('.quantity-form');
     const formData = new FormData(form);
     
@@ -585,40 +573,52 @@ function updateQuantity(btn, change, cartId, maxStock) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Update item total
             const price = parseFloat(input.dataset.price);
             const itemTotal = btn.closest('.cart-item').querySelector('[data-item-total]');
             itemTotal.textContent = 'Rp ' + (price * newValue).toLocaleString('id-ID');
             
-            // Update summary
             updateSummary();
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        location.reload(); // Fallback: reload page
+        location.reload();
     });
 }
 
-// Update Summary
 function updateSummary() {
     let subtotal = 0;
+    let checkedCount = 0;
     document.querySelectorAll('.item-checkbox:checked').forEach(checkbox => {
         const cartItem = checkbox.closest('.cart-item');
         const input = cartItem.querySelector('.qty-input');
         const price = parseFloat(input.dataset.price);
         const quantity = parseInt(input.value);
         subtotal += price * quantity;
+        checkedCount++;
     });
     
-    const adminFee = 5000;
+    const adminFee = checkedCount > 0 ? 5000 : 0;
     const total = subtotal + adminFee;
     
     document.getElementById('subtotal-display').textContent = 'Rp ' + subtotal.toLocaleString('id-ID');
     document.getElementById('total-display').textContent = 'Rp ' + total.toLocaleString('id-ID');
+    document.getElementById('checked-count').textContent = checkedCount;
+
+    const btnCheckout = document.getElementById('btn-checkout');
+    if (btnCheckout) {
+        if (checkedCount === 0) {
+            btnCheckout.disabled = true;
+            btnCheckout.style.opacity = '0.5';
+            btnCheckout.style.cursor = 'not-allowed';
+        } else {
+            btnCheckout.disabled = false;
+            btnCheckout.style.opacity = '1';
+            btnCheckout.style.cursor = 'pointer';
+        }
+    }
 }
 
-// Select All
 document.getElementById('selectAll')?.addEventListener('change', function() {
     document.querySelectorAll('.item-checkbox').forEach(checkbox => {
         checkbox.checked = this.checked;
@@ -626,12 +626,39 @@ document.getElementById('selectAll')?.addEventListener('change', function() {
     updateSummary();
 });
 
-// Checkbox change
 document.querySelectorAll('.item-checkbox').forEach(checkbox => {
-    checkbox.addEventListener('change', updateSummary);
+    checkbox.addEventListener('change', function() {
+        updateSummary();
+        const allCheckboxes = document.querySelectorAll('.item-checkbox');
+        const allChecked = document.querySelectorAll('.item-checkbox:checked');
+        const selectAll = document.getElementById('selectAll');
+        if (selectAll) {
+            selectAll.checked = allCheckboxes.length === allChecked.length;
+        }
+    });
 });
 
-// Delete Selected
+document.getElementById('checkout-form')?.addEventListener('submit', function(e) {
+    const selectedCheckboxes = document.querySelectorAll('.item-checkbox:checked');
+    
+    if (selectedCheckboxes.length === 0) {
+        e.preventDefault();
+        alert('Pilih minimal 1 item untuk checkout!');
+        return;
+    }
+
+    const container = document.getElementById('selected-items-container');
+    container.innerHTML = '';
+
+    selectedCheckboxes.forEach(checkbox => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'selected_items[]';
+        input.value = checkbox.dataset.cartId;
+        container.appendChild(input);
+    });
+});
+
 function deleteSelected() {
     const selected = document.querySelectorAll('.item-checkbox:checked');
     if (selected.length === 0) {

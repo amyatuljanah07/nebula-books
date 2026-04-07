@@ -1,5 +1,6 @@
 @extends('layouts1.user')
 
+@section('title', 'Detail Pesanan - NebulaBooks')
 @section('page-title', 'Detail Pesanan')
 @section('page-subtitle', 'Order #' . $order->order_number)
 
@@ -7,12 +8,10 @@
 <div class="container-fluid px-4 py-4">
     <div class="row justify-content-center">
         <div class="col-md-10">
-            <!-- Back Button -->
             <a href="{{ route('user.dashboard') }}" class="btn btn-back mb-4">
                 <i class="fas fa-arrow-left me-2"></i>Kembali ke Dashboard
             </a>
 
-            <!-- Order Header -->
             <div class="order-header-card mb-4">
                 <div class="header-gradient"></div>
                 <div class="header-content">
@@ -37,32 +36,21 @@
                                 'cancelled' => ['class' => 'status-cancelled', 'icon' => 'times-circle', 'text' => 'Dibatalkan']
                             ];
                             
-                            $paymentBadges = [
-                                'unpaid' => ['class' => 'payment-unpaid', 'icon' => 'times-circle', 'text' => 'Belum Bayar'],
-                                'pending_verification' => ['class' => 'payment-pending', 'icon' => 'hourglass-half', 'text' => 'Menunggu Verifikasi'],
-                                'paid' => ['class' => 'payment-paid', 'icon' => 'check-circle', 'text' => 'Lunas']
-                            ];
-                            
                             $status = $statusBadges[$order->status] ?? ['class' => 'status-pending', 'icon' => 'question', 'text' => 'Unknown'];
-                            $payment = $paymentBadges[$order->payment_status] ?? ['class' => 'payment-pending', 'icon' => 'question', 'text' => 'Unknown'];
                         @endphp
                         
                         <span class="status-badge {{ $status['class'] }}">
                             <i class="fas fa-{{ $status['icon'] }} me-2"></i>{{ $status['text'] }}
                         </span>
-                        <span class="status-badge {{ $payment['class'] }}">
-                            <i class="fas fa-{{ $payment['icon'] }} me-2"></i>{{ $payment['text'] }}
-                        </span>
                     </div>
                 </div>
             </div>
 
-            <!-- Progress Timeline -->
             <div class="timeline-card mb-4">
                 <div class="timeline">
                     @php
                         $steps = [
-                            'pending' => ['icon' => 'clipboard-list', 'text' => 'Pesanan Dibuat', 'color' => '#667eea'],
+                            'pending' => ['icon' => 'clipboard-list', 'text' => 'Pesanan Dibuat', 'color' => '#5B4B9F'],
                             'processing' => ['icon' => 'box-open', 'text' => 'Diproses', 'color' => '#f093fb'],
                             'shipped' => ['icon' => 'shipping-fast', 'text' => 'Dikirim', 'color' => '#4facfe'],
                             'completed' => ['icon' => 'check-double', 'text' => 'Selesai', 'color' => '#00f2fe']
@@ -79,7 +67,7 @@
                             $isCurrent = $key === $order->status;
                         @endphp
                         <div class="timeline-step {{ $isActive ? 'active' : '' }} {{ $isCurrent ? 'current' : '' }}">
-                            <div class="step-icon" style="{{ $isActive ? 'background: linear-gradient(135deg, ' . $step['color'] . ', ' . $steps[array_keys($steps)[min($stepIndex + 1, 3)]]['color'] . ')' : '' }}">
+                            <div class="step-icon" style="{{ $isActive ? 'background: ' . $step['color'] : '' }}">
                                 <i class="fas fa-{{ $step['icon'] }}"></i>
                             </div>
                             <span class="step-text">{{ $step['text'] }}</span>
@@ -92,7 +80,6 @@
             </div>
 
             <div class="row">
-                <!-- Order Items -->
                 <div class="col-md-8">
                     <div class="items-card mb-4">
                         <div class="card-header-custom">
@@ -151,9 +138,7 @@
                     </div>
                 </div>
 
-                <!-- Order Info -->
                 <div class="col-md-4">
-                    <!-- Shipping Info -->
                     <div class="info-card shipping-card mb-4">
                         <div class="info-card-header">
                             <div class="info-icon bg-gradient-blue">
@@ -177,7 +162,6 @@
                         </div>
                     </div>
 
-                    <!-- Payment Info -->
                     <div class="info-card payment-card mb-4">
                         <div class="info-card-header">
                             <div class="info-icon bg-gradient-green">
@@ -197,7 +181,7 @@
                                     'dana' => ['name' => 'DANA', 'color' => '#108ee9'],
                                     'shopeepay' => ['name' => 'ShopeePay', 'color' => '#ee4d2d']
                                 ];
-                                $method = $paymentMethods[$order->payment_method] ?? ['name' => $order->payment_method, 'color' => '#667eea'];
+                                $method = $paymentMethods[$order->payment_method] ?? ['name' => $order->payment_method, 'color' => '#5B4B9F'];
                             @endphp
                             <div class="payment-method-badge" style="background: {{ $method['color'] }}">
                                 <i class="fas fa-university me-2"></i>{{ $method['name'] }}
@@ -205,7 +189,6 @@
                         </div>
                     </div>
 
-                    <!-- Payment Proof -->
                     @if($order->payment_proof)
                     <div class="info-card proof-card mb-4">
                         <div class="info-card-header">
@@ -215,11 +198,13 @@
                             <h5>Bukti Pembayaran</h5>
                         </div>
                         <div class="info-content text-center">
-                            <div class="proof-image-wrapper">
+                            <div class="proof-image-wrapper" 
+                                 data-bs-toggle="modal" 
+                                 data-bs-target="#paymentProofModal"
+                                 style="cursor: pointer;">
                                 <img src="{{ asset('storage/' . $order->payment_proof) }}" 
                                      alt="Bukti Pembayaran" 
-                                     class="proof-image"
-                                     onclick="window.open(this.src, '_blank')">
+                                     class="proof-image">
                                 <div class="proof-overlay">
                                     <i class="fas fa-search-plus"></i>
                                     <span>Klik untuk zoom</span>
@@ -229,20 +214,8 @@
                     </div>
                     @endif
 
-                    <!-- Actions -->
-                    @if($order->payment_status === 'unpaid')
-                    <a href="{{ route('user.payment', $order) }}" class="btn-pay-now">
-                        <div class="btn-content">
-                            <i class="fas fa-credit-card"></i>
-                            <span>Bayar Sekarang</span>
-                        </div>
-                        <div class="btn-arrow">
-                            <i class="fas fa-arrow-right"></i>
-                        </div>
-                    </a>
-                    @endif
+                 
 
-                    <!-- Help Card -->
                     <div class="help-card">
                         <div class="help-icon">
                             <i class="fas fa-headset"></i>
@@ -250,8 +223,8 @@
                         <div class="help-content">
                             <h6>Butuh Bantuan?</h6>
                             <p>Hubungi customer service kami</p>
-                            <a href="https://wa.me/6281234567890" target="_blank" class="help-link">
-                                <i class="fab fa-whatsapp me-2"></i>Chat WhatsApp
+                            <a href="{{ route('landing') }}#contact" class="help-link">
+                                <i class="fas fa-envelope me-2"></i>Hubungi Kami
                             </a>
                         </div>
                     </div>
@@ -261,10 +234,29 @@
     </div>
 </div>
 
+<!-- Modal Zoom Bukti Pembayaran -->
+<div class="modal fade" id="paymentProofModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content bg-dark border-0">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title text-white">Bukti Pembayaran - Order #{{ $order->order_number }}</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3 text-center" style="background: #111;">
+                @if($order->payment_proof)
+                    <img src="{{ asset('storage/' . $order->payment_proof) }}" 
+                         alt="Bukti Pembayaran" 
+                         class="img-fluid rounded" 
+                         style="max-height: 80vh; object-fit: contain;">
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
-/* Back Button */
 .btn-back {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #5B4B9F;
     color: white;
     border: none;
     padding: 12px 24px;
@@ -276,11 +268,10 @@
 
 .btn-back:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+    box-shadow: 0 6px 20px rgba(91, 75, 159, 0.5);
     color: white;
 }
 
-/* Order Header Card */
 .order-header-card {
     background: white;
     border-radius: 20px;
@@ -291,9 +282,7 @@
 
 .header-gradient {
     height: 8px;
-    background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe, #00f2fe);
-    background-size: 200% 200%;
-    animation: gradientMove 3s ease infinite;
+    background: #5B4B9F;
 }
 
 @keyframes gradientMove {
@@ -320,14 +309,14 @@
 .order-icon {
     width: 60px;
     height: 60px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #5B4B9F;
     border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
     font-size: 24px;
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 8px 25px rgba(91, 75, 159, 0.4);
 }
 
 .header-left h3 {
@@ -348,7 +337,6 @@
     align-items: flex-end;
 }
 
-/* Status Badges */
 .status-badge {
     padding: 10px 20px;
     border-radius: 30px;
@@ -360,46 +348,45 @@
 }
 
 .status-pending {
-    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    background: #ffecd2;
     color: #8b5a2b;
 }
 
 .status-processing {
-    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    background: #a8edea;
     color: #5a5a8b;
 }
 
 .status-shipped {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #5B4B9F;
     color: white;
 }
 
 .status-completed {
-    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    background: #38ef7d;
     color: white;
 }
 
 .status-cancelled {
-    background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+    background: #ff4b2b;
     color: white;
 }
 
 .payment-unpaid {
-    background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+    background: #ff4b2b;
     color: white;
 }
 
 .payment-pending {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: #f5576c;
     color: white;
 }
 
 .payment-paid {
-    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    background: #38ef7d;
     color: white;
 }
 
-/* Timeline Card */
 .timeline-card {
     background: white;
     border-radius: 20px;
@@ -472,10 +459,9 @@
 }
 
 .timeline-line.active {
-    background: linear-gradient(90deg, #667eea, #764ba2);
+    background: #5B4B9F;
 }
 
-/* Items Card */
 .items-card {
     background: white;
     border-radius: 20px;
@@ -484,7 +470,7 @@
 }
 
 .card-header-custom {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #5B4B9F;
     padding: 20px 25px;
     display: flex;
     align-items: center;
@@ -531,7 +517,7 @@
     align-items: center;
     gap: 15px;
     padding: 20px;
-    background: linear-gradient(135deg, #f8f9ff 0%, #fff 100%);
+    background: #f8f9ff;
     border-radius: 16px;
     margin-bottom: 15px;
     border: 2px solid transparent;
@@ -552,7 +538,7 @@
 }
 
 .book-item:hover {
-    border-color: #667eea;
+    border-color: #5B4B9F;
     transform: translateX(5px);
     box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
 }
@@ -560,7 +546,7 @@
 .book-number {
     width: 30px;
     height: 30px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #5B4B9F;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -589,7 +575,7 @@
 .book-placeholder {
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #5B4B9F;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -621,7 +607,7 @@
 }
 
 .quantity-badge {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: #f5576c;
     color: white;
     padding: 4px 12px;
     border-radius: 20px;
@@ -648,15 +634,11 @@
 .book-subtotal span {
     font-size: 18px;
     font-weight: 800;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #5B4B9F;
 }
 
-/* Order Total Section */
 .order-total-section {
-    background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+    background: #f8f9ff;
     padding: 25px;
     border-top: 2px dashed #e9ecef;
 }
@@ -672,20 +654,16 @@
 .total-row.grand-total {
     margin-top: 15px;
     padding-top: 20px;
-    border-top: 2px solid #667eea;
+    border-top: 2px solid #5B4B9F;
     font-size: 20px;
     color: #1a1a2e;
 }
 
 .total-row.grand-total span:last-child {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #5B4B9F;
     font-weight: 800;
 }
 
-/* Info Cards */
 .info-card {
     background: white;
     border-radius: 20px;
@@ -713,15 +691,15 @@
 }
 
 .bg-gradient-blue {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: #00f2fe;
 }
 
 .bg-gradient-green {
-    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    background: #38ef7d;
 }
 
 .bg-gradient-orange {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: #f5576c;
 }
 
 .info-card-header h5 {
@@ -764,7 +742,6 @@
     line-height: 1.6;
 }
 
-/* Payment Method Badge */
 .payment-method-badge {
     padding: 15px 25px;
     border-radius: 12px;
@@ -775,13 +752,13 @@
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
-/* Proof Image */
 .proof-image-wrapper {
     position: relative;
     display: inline-block;
     border-radius: 12px;
     overflow: hidden;
     cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .proof-image {
@@ -793,7 +770,7 @@
 .proof-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9));
+    background: rgba(91, 75, 159, 0.9);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -802,6 +779,8 @@
     color: white;
     opacity: 0;
     transition: opacity 0.3s ease;
+    /* PENTING: Agar klik bisa menembus overlay ke wrapper */
+    pointer-events: none;
 }
 
 .proof-overlay i {
@@ -818,15 +797,52 @@
 }
 
 .proof-image-wrapper:hover .proof-image {
-    transform: scale(1.05);
+    transform: scale(1.08);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
 }
 
-/* Pay Now Button */
+.proof-image-wrapper:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.3);
+}
+
+/* Modal styling */
+#paymentProofModal .modal-content {
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+#paymentProofModal .modal-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+#paymentProofModal .modal-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+}
+
+#paymentProofModal .img-fluid {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    animation: zoomIn 0.3s ease;
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 .btn-pay-now {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    background: #38ef7d;
     color: white;
     padding: 18px 25px;
     border-radius: 16px;
@@ -868,9 +884,8 @@
     transform: translateX(5px);
 }
 
-/* Help Card */
 .help-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #5B4B9F;
     border-radius: 20px;
     padding: 25px;
     display: flex;
@@ -921,7 +936,6 @@
     transform: scale(1.05);
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .header-content {
         flex-direction: column;

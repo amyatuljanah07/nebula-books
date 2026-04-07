@@ -1,11 +1,11 @@
 @extends('layouts1.user')
 
+@section('title', 'Katalog Buku - NebulaBooks')
 @section('page-title', 'Katalog Buku')
 @section('page-subtitle', 'Temukan buku favorit Anda')
 
 @section('content')
 <div class="container-fluid px-4">
-    <!-- Alert Messages -->
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
@@ -34,7 +34,6 @@
         </div>
     </div>
 
-    <!-- Search & Filter -->
     <div class="row mb-4">
         <div class="col-12">
             <div class="card search-filter-card">
@@ -79,7 +78,6 @@
         </div>
     </div>
 
-    <!-- Books Grid - 2 Columns -->
     <div class="row g-4">
         @forelse($books as $book)
         <div class="col-md-6">
@@ -128,9 +126,6 @@
                             <a href="{{ route('books.show', $book) }}" class="btn btn-sm btn-outline-primary" title="Detail">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <button class="btn btn-sm btn-outline-danger" title="Wishlist">
-                                <i class="fas fa-heart"></i>
-                            </button>
                             @if($book->stock > 0)
                                 <form action="{{ route('user.cart.add', $book) }}" method="POST" style="display: inline;">
                                     @csrf
@@ -162,13 +157,11 @@
         @endforelse
     </div>
 
-    <!-- Pagination -->
     @if($books->hasPages())
     <div class="row mt-5 mb-4">
         <div class="col-12">
             <nav>
                 <ul class="pagination justify-content-center custom-pagination">
-                    {{-- Previous Page Link --}}
                     @if ($books->onFirstPage())
                         <li class="page-item disabled">
                             <span class="page-link"><i class="fas fa-chevron-left"></i></span>
@@ -179,7 +172,6 @@
                         </li>
                     @endif
 
-                    {{-- Pagination Elements --}}
                     @foreach ($books->links()->elements[0] as $page => $url)
                         @if ($page == $books->currentPage())
                             <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
@@ -188,7 +180,6 @@
                         @endif
                     @endforeach
 
-                    {{-- Next Page Link --}}
                     @if ($books->hasMorePages())
                         <li class="page-item">
                             <a class="page-link" href="{{ $books->nextPageUrl() }}"><i class="fas fa-chevron-right"></i></a>
@@ -256,7 +247,7 @@
     position: absolute;
     top: 10px;
     right: 10px;
-    background: linear-gradient(135deg, #f5576c 0%, #ff6b6b 100%);
+    background: #ff6b6b;
     color: white;
     padding: 4px 10px;
     border-radius: 15px;
@@ -266,11 +257,11 @@
 }
 
 .book-badge.new {
-    background: linear-gradient(135deg, #0acffe 0%, #495aff 100%);
+    background: #495aff;
 }
 
 .book-badge.sale {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: #f5576c;
 }
 
 .book-image-wrapper {
@@ -302,7 +293,7 @@
 
 .book-category {
     display: inline-block;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #5B4B9F;
     color: white;
     padding: 3px 10px;
     border-radius: 12px;
@@ -399,21 +390,21 @@
 }
 
 .book-actions .btn-outline-primary:hover {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #5B4B9F;
     border-color: transparent;
     color: white;
     transform: translateY(-2px);
 }
 
 .book-actions .btn-outline-danger:hover {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: #f5576c;
     border-color: transparent;
     color: white;
     transform: translateY(-2px);
 }
 
 .book-actions .btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #5B4B9F;
     border: none;
 }
 
@@ -432,7 +423,7 @@
 }
 
 .custom-pagination .page-item.active .page-link {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #5B4B9F;
     border: none;
 }
 
@@ -441,7 +432,7 @@
     color: #667eea;
 }
 
-/* Responsive */
+
 @media (max-width: 768px) {
     .book-card-horizontal {
         flex-direction: column;

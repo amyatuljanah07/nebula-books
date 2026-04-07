@@ -1,11 +1,11 @@
 @extends('layouts1.user')
 
+@section('title', $book->title . ' - NebulaBooks')
 @section('page-title', $book->title)
 @section('page-subtitle', 'Detail Buku')
 
 @section('content')
 <div class="container-fluid px-4 py-4">
-    <!-- Breadcrumb -->
     <nav aria-label="breadcrumb" class="mb-3">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('user.dashboard') }}">Dashboard</a></li>
@@ -14,7 +14,6 @@
         </ol>
     </nav>
 
-    <!-- Book Detail -->
     <div class="row mb-4">
         <div class="col-md-4">
             <div class="book-detail-image">
@@ -89,7 +88,7 @@
                             <i class="fas fa-ban me-2"></i>Stok Habis
                         </button>
                     @endif
-                    <button class="btn btn-outline-danger">
+                    <button class="btn btn-outline-danger" disabled style="display: none;">
                         <i class="fas fa-heart me-2"></i>Wishlist
                     </button>
                 </div>
@@ -106,7 +105,6 @@
         </div>
     </div>
 
-    <!-- Related Books -->
     @if($relatedBooks->count() > 0)
     <div class="related-books-section">
         <h4 class="section-title">Buku Terkait</h4>
@@ -182,7 +180,7 @@
 
 .book-category-badge {
     display: inline-block;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #5B4B9F;
     color: white;
     padding: 5px 15px;
     border-radius: 15px;

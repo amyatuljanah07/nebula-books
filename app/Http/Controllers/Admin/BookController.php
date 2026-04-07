@@ -6,14 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Book;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 
 class BookController extends Controller
 {
    public function index(Request $request)
 {
     $query = Book::with('category');
-
-    // Search (title, author, isbn)
     if ($request->search) {
         $search = $request->search;
         $query->where(function ($q) use ($search) {
@@ -22,18 +22,12 @@ class BookController extends Controller
               ->orWhere('isbn', 'like', "%$search%");
         });
     }
-
-    // Filter category
     if ($request->category) {
         $query->where('category_id', $request->category);
     }
-
-    // Filter status
     if ($request->status) {
         $query->where('status', $request->status);
     }
-
-    // Pagination (keep search & filter)
     $books = $query->latest()->paginate(10)->appends($request->all());
 
     $categories = Category::all();
@@ -112,7 +106,7 @@ class BookController extends Controller
     public function destroy(Book $book)
     {
         if ($book->image) {
-            \Storage::disk('public')->delete($book->image);
+            Storage::disk('public')->delete($book->image);
         }
 
         $book->delete();

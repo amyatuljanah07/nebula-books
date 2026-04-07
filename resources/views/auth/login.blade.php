@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #5B4B9F;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -119,7 +119,7 @@
         .btn-login {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #5B4B9F;
             color: white;
             border: none;
             border-radius: 5px;

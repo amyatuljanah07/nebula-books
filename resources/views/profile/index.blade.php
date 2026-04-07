@@ -9,7 +9,7 @@
     <div class="col-md-4 mb-4">
         <div class="card border-0 shadow-sm">
             <div class="card-body text-center py-5">
-                <div class="mx-auto rounded-circle d-flex align-items-center justify-content-center mb-4" style="width: 120px; height: 120px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); font-size: 3rem; color: white;">
+                <div class="mx-auto rounded-circle d-flex align-items-center justify-content-center mb-4" style="width: 120px; height: 120px; background: #5B4B9F; font-size: 3rem; color: white;">
                     {{ strtoupper(substr($user->name, 0, 1)) }}
                 </div>
                 <h4>{{ $user->name }}</h4>
@@ -36,6 +36,8 @@
                     <tr><th>Email</th><td>{{ $user->email }}</td></tr>
                     <tr><th>Telepon</th><td>{{ $user->phone ?? '-' }}</td></tr>
                     <tr><th>Alamat</th><td>{{ $user->address ?? '-' }}</td></tr>
+                    <tr><th>Kota</th><td>{{ $user->city ?? '-' }}</td></tr>
+                    <tr><th>Kode Pos</th><td>{{ $user->postal_code ?? '-' }}</td></tr>
                     <tr><th>Bergabung</th><td>{{ $user->created_at->format('d M Y') }}</td></tr>
                 </table>
             </div>

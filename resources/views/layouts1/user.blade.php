@@ -5,17 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'NebulaBooks - User Dashboard')</title>
     
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --primary-color: #667eea;
-            --secondary-color: #764ba2;
+            --primary-color: #5B4B9F;
+            --secondary-color: #5B4B9F;
             --sidebar-width: 280px;
             --navbar-height: 70px;
         }
@@ -32,14 +29,13 @@
             overflow-x: hidden;
         }
 
-        /* Sidebar */
         .sidebar {
             position: fixed;
             left: 0;
             top: 0;
             width: var(--sidebar-width);
             height: 100vh;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            background: var(--primary-color);
             padding: 2rem 0;
             transition: transform 0.3s ease;
             z-index: 1000;
@@ -117,7 +113,6 @@
             text-align: center;
         }
 
-        /* Navbar */
         .top-navbar {
             position: fixed;
             top: 0;
@@ -219,7 +214,7 @@
             width: 45px;
             height: 45px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            background: var(--primary-color);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -241,7 +236,6 @@
             color: #666;
         }
 
-        /* Main Content */
         .main-content {
             margin-left: var(--sidebar-width);
             margin-top: var(--navbar-height);
@@ -251,7 +245,6 @@
             transition: margin-left 0.3s ease;
         }
 
-        /* Overlay untuk mobile */
         .sidebar-overlay {
             position: fixed;
             top: 0;
@@ -270,7 +263,6 @@
             opacity: 1;
         }
 
-        /* Desktop collapsed state */
         body.sidebar-collapsed .sidebar {
             transform: translateX(-100%);
         }
@@ -283,7 +275,6 @@
             margin-left: 0;
         }
 
-        /* Mobile state */
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -328,10 +319,8 @@
     </style>
 </head>
 <body>
-    <!-- Sidebar Overlay -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <i class="fas fa-book"></i>
@@ -345,7 +334,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('books.index') }}" class="{{ request()->routeIs('user.books.*') ? 'active' : '' }}">
+                <a href="{{ route('books.index') }}" class="{{ request()->routeIs('books.*') ? 'active' : '' }}">
                     <i class="fas fa-book"></i>
                     <span>Katalog Buku</span>
                 </a>
@@ -355,7 +344,7 @@
                     <i class="fas fa-shopping-cart"></i>
                     <span>Keranjang</span>
                     @php
-                        $cartCount = \App\Models\Cart::where('user_id', Auth::id())->sum('quantity');
+                        $cartCount = \App\Models\Cart::where('user_id', Auth::id())->count();
                     @endphp
                     @if($cartCount > 0)
                         <span class="badge bg-danger rounded-pill ms-auto">{{ $cartCount }}</span>
@@ -365,7 +354,7 @@
            
           
             <li>
-                <a href="{{ route('profile.index') }}" class="{{ request()->routeIs('profile.index.*') ? 'active' : '' }}">
+                <a href="{{ route('profile.index') }}" class="{{ request()->routeIs('profile.*') ? 'active' : '' }}">
         <i class="fas fa-user"></i>
         <span>Profile</span>
     </a>
@@ -383,7 +372,6 @@
         </ul>
     </aside>
 
-    <!-- Top Navbar -->
     <nav class="top-navbar" id="topNavbar">
         <div class="navbar-left">
             <button class="menu-toggle" id="menuToggle">
@@ -398,18 +386,14 @@
             <a href="{{ route('user.cart.index') }}" class="notification-icon" style="text-decoration: none;">
                 <i class="fas fa-shopping-cart"></i>
                 @php
-                    $cartCount = \App\Models\Cart::where('user_id', Auth::id())->sum('quantity');
+                    $cartCount = \App\Models\Cart::where('user_id', Auth::id())->count();
                 @endphp
                 @if($cartCount > 0)
                     <span class="notification-badge">{{ $cartCount }}</span>
                 @endif
             </a>
-            <button class="notification-icon">
-                <i class="fas fa-bell"></i>
-                <span class="notification-badge">5</span>
-            </button>
             <div class="user-profile">
-                <div class="user-avatar">Z</div>
+                <div class="user-avatar">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
                 <div class="user-info">
                     <h6>{{ Auth::user()->name }}</h6>
                     <p>User</p>
@@ -419,12 +403,10 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
     <main class="main-content" id="mainContent">
         @yield('content')
     </main>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
@@ -433,31 +415,24 @@
         const sidebarOverlay = document.getElementById('sidebarOverlay');
         let isMobile = window.innerWidth <= 768;
 
-        // Update mobile state on resize
         window.addEventListener('resize', function() {
             isMobile = window.innerWidth <= 768;
             
             if (!isMobile) {
-                // Reset mobile classes when switching to desktop
                 sidebar.classList.remove('mobile-show');
                 sidebarOverlay.classList.remove('show');
             } else {
-                // Reset desktop classes when switching to mobile
                 document.body.classList.remove('sidebar-collapsed');
             }
         });
 
-        // Toggle button click
         menuToggle.addEventListener('click', function() {
             if (isMobile) {
-                // Mobile: slide sidebar with overlay
                 sidebar.classList.toggle('mobile-show');
                 sidebarOverlay.classList.toggle('show');
             } else {
-                // Desktop: collapse sidebar
                 document.body.classList.toggle('sidebar-collapsed');
                 
-                // Change icon
                 const icon = menuToggle.querySelector('i');
                 if (document.body.classList.contains('sidebar-collapsed')) {
                     icon.classList.remove('fa-bars');
@@ -469,13 +444,11 @@
             }
         });
 
-        // Close sidebar when clicking overlay (mobile only)
         sidebarOverlay.addEventListener('click', function() {
             sidebar.classList.remove('mobile-show');
             sidebarOverlay.classList.remove('show');
         });
 
-        // Close sidebar when clicking menu item on mobile
         const menuLinks = document.querySelectorAll('.sidebar-menu a');
         menuLinks.forEach(link => {
             link.addEventListener('click', function() {
@@ -488,5 +461,8 @@
     </script>
 
     @yield('scripts')
+
+    <!-- Chat Widget -->
+    @include('components.chat-widget')
 </body>
 </html>
